@@ -1,4 +1,5 @@
 import time
+import warnings
 
 import numpy
 import pygad
@@ -13,7 +14,7 @@ udzwig = 25
 # geny to liczby: 0 lub 1
 gene_space = [0, 1]
 
-
+warnings.filterwarnings("ignore", category=UserWarning)
 # definiujemy funkcję fitness
 def fitness_func(solution, solution_idx):
     waga = 0
@@ -38,7 +39,7 @@ num_genes = len(wartosci)
 # ile pokolen
 # ilu rodzicow zachowac (kilka procent)
 num_parents_mating = 5
-num_generations = 1000
+num_generations = 30
 keep_parents = 2
 
 # jaki typ selekcji rodzicow?
@@ -51,8 +52,9 @@ crossover_type = "single_point"
 # mutacja ma dzialac na ilu procent genow?
 # trzeba pamietac ile genow ma chromosom
 mutation_type = "random"
-mutation_percent_genes = 10
+mutation_percent_genes = 7
 
+start = time.time()
 # inicjacja algorytmu z powyzszymi parametrami wpisanymi w atrybuty
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
@@ -67,7 +69,7 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        mutation_percent_genes=mutation_percent_genes,
                        stop_criteria=["reach_1600.0"])  # zadanie 2 a
 
-start = time.time()
+
 # uruchomienie algorytmu
 ga_instance.run()
 
@@ -98,8 +100,8 @@ print("=============================================================")
 print("Łączna wartość: ", suma_wartosci)
 print("Łączna waga: ", suma_wag)
 
-print("Liczba pokoleń: ", solution_idx + 1)  # zadanie 2 b
-print("Obliczono w czasie: ", end - start)  # zadanie 2 c
+print("Liczba pokoleń: ", ga_instance.generations_completed)  # zadanie 2 b
+print("Obliczono w czasie: ", end - start, "s.")  # zadanie 2 c
 
 '''
 zadanie 2 d
@@ -114,5 +116,5 @@ zadanie 2 d
 9 - 0.011996269226074219
 10 - 0.004517316818237305
 
-średnia = 0.011599976434893501
+średnia = 0.011599976434893501 s.
 '''
