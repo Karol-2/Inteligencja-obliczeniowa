@@ -1,11 +1,11 @@
 import numpy
 import pygad
 
-
 przedmioty = ["zegar", "obraz-pejzaż", "obraz-portret", "radio", "laptop", "lampka nocna", "srebrne sztućce",
               "porcelana", "figurka z brązu", "skórzana torebka", "odkurzacz"]
 wartosci = [100, 300, 200, 40, 500, 70, 100, 250, 300, 280, 300]
 wagi = [7, 7, 6, 2, 5, 6, 1, 3, 10, 3, 15]
+
 udzwig = 25
 
 # definiujemy parametry chromosomu
@@ -37,7 +37,7 @@ num_genes = len(wartosci)
 # ile pokolen
 # ilu rodzicow zachowac (kilka procent)
 num_parents_mating = 5
-num_generations = 100
+num_generations = 30
 keep_parents = 2
 
 # jaki typ selekcji rodzicow?
@@ -78,7 +78,7 @@ prediction = numpy.sum(wagi * solution)
 print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
 
 # wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
-ga_instance.plot_fitness()
+#ga_instance.plot_fitness()
 
 print("=============================================================")
 suma_wartosci = 0

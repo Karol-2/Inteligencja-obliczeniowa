@@ -38,7 +38,7 @@ num_genes = len(wartosci)
 # ile pokolen
 # ilu rodzicow zachowac (kilka procent)
 num_parents_mating = 5
-num_generations = 100
+num_generations = 1000
 keep_parents = 2
 
 # jaki typ selekcji rodzicow?
@@ -65,14 +65,13 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        crossover_type=crossover_type,
                        mutation_type=mutation_type,
                        mutation_percent_genes=mutation_percent_genes,
-                       stop_criteria=["reach_1600.0"])
+                       stop_criteria=["reach_1600.0"])  # zadanie 2 a
 
 start = time.time()
 # uruchomienie algorytmu
 ga_instance.run()
 
 end = time.time()
-print("czas: ",end - start)
 
 # podsumowanie: najlepsze znalezione rozwiazanie (chromosom+ocena)
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
@@ -84,7 +83,7 @@ prediction = numpy.sum(wagi * solution)
 print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
 
 # wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
-ga_instance.plot_fitness()
+# ga_instance.plot_fitness()
 
 print("=============================================================")
 suma_wartosci = 0
@@ -99,4 +98,21 @@ print("=============================================================")
 print("Łączna wartość: ", suma_wartosci)
 print("Łączna waga: ", suma_wag)
 
-print("Liczba pokoleń: ", solution_idx + 1)
+print("Liczba pokoleń: ", solution_idx + 1)  # zadanie 2 b
+print("Obliczono w czasie: ", end - start)  # zadanie 2 c
+
+'''
+zadanie 2 d
+1 - 0.005000114440917969
+2 - 0.007998466491699219
+3 - 0.018010854721069336
+4 - 0.012999534606933594
+5 - 0.01248788833618164
+6 - 0.010999917984008789
+7 - 0.010978221893310547
+8 - 0.019999980926513672
+9 - 0.011996269226074219
+10 - 0.004517316818237305
+
+średnia = 0.011599976434893501
+'''
