@@ -1,17 +1,17 @@
-import pygad
-import numpy
-import random
 import math
+import random
+
+import pygad
 
 
 # definiujemy parametry chromosomu
 # geny to liczby: 0 lub 1
 
 def losuj():
-    return random.uniform(0, 1.0)
+    return random.uniform(0, 1)
 
 
-gene_space = [losuj(), losuj(), losuj(), losuj(), losuj(), losuj() ]
+gene_space = [losuj(), losuj(), losuj(), losuj(), losuj(), losuj()]
 
 
 def endurance(x, y, z, u, v, w):
@@ -20,8 +20,8 @@ def endurance(x, y, z, u, v, w):
 
 # definiujemy funkcję fitness
 def fitness_func(solution, solution_idx):
-    zajebistosc = endurance(solution[0], solution[1], solution[2], solution[3], solution[4], solution[5])
-    return zajebistosc
+    fit = endurance(solution[0], solution[1], solution[2], solution[3], solution[4], solution[5])
+    return fit
 
 
 fitness_function = fitness_func
@@ -35,8 +35,8 @@ num_genes = 6
 # ile pokolen
 # ilu rodzicow zachowac (kilka procent)
 num_parents_mating = 5
-num_generations = 50
-keep_parents = 2
+num_generations = 100
+keep_parents = 4
 
 # jaki typ selekcji rodzicow?
 # sss = steady, rws=roulette, rank = rankingowa, tournament = turniejowa
@@ -48,9 +48,9 @@ crossover_type = "single_point"
 # mutacja ma dzialac na ilu procent genow?
 # trzeba pamietac ile genow ma chromosom
 mutation_type = "random"
-mutation_percent_genes = 20
+mutation_percent_genes = 20  # gdy jest na 5 to wyniki 2.7 - 2.8
 
-# inicjacja algorytmu z powyzszymi parametrami wpisanymi w atrybuty
+
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
@@ -63,17 +63,12 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        mutation_type=mutation_type,
                        mutation_percent_genes=mutation_percent_genes)
 
-# uruchomienie algorytmu
 ga_instance.run()
 
-# podsumowanie: najlepsze znalezione rozwiazanie (chromosom+ocena)
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
-print("Parameters of the best solution : {solution}".format(solution=solution))
-print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
+print("Best solution: {}".format(solution))
+print("Best fitness: {}".format(solution_fitness))
 
-# tutaj dodatkowo wyswietlamy sume wskazana przez jedynki
-prediction = numpy.sum(6 * solution)
-print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
-
-# wyswietlenie wykresu: jak zmieniala sie ocena na przestrzeni pokolen
 ga_instance.plot_fitness()
+# Best solution: [0.99965839 0.82935113 0.99965839 0.99965839 0.14897972 0.14897972]
+# Best fitness: 2.840570554400673
