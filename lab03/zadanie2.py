@@ -18,6 +18,7 @@ labirynt = [
 start_coord = [1, 1]
 exit_coord = [10, 10]
 max_kroki = 30
+gene_space = [0, 1, 2, 3]
 '''
 Kierunki ruchu: 
 0 - lewo
@@ -25,10 +26,6 @@ Kierunki ruchu:
 2 - prawo
 3 - dół
 '''
-
-# za cofanie się, odbicie się jest punkt karny
-
-gene_space = [0, 1, 2, 3]
 
 
 def odleglosc(stop, exit):
@@ -68,7 +65,7 @@ def fitness_func(solution, solution_idx):
                     karne_punkty += cofanie_kara  # kara za cofanie się
             else:
                 karne_punkty += sciana_kara
-        # position = [1,1]
+
         elif ruch == 2:  # prawo
             kolejne_pole = labirynt[position[1]][position[0] + 1]
 
@@ -139,7 +136,7 @@ print("Parameters of the best solution: {solution}".format(solution=solution))
 print("Fitness value of the best solution  = {solution_fitness}".format(solution_fitness=solution_fitness))
 
 
-def rysowanie(solution, solution_idx):
+def rysowanie(solution):
     position = start_coord
     odwiedzone_pola = [position]
     cofniecia = 0
@@ -153,9 +150,9 @@ def rysowanie(solution, solution_idx):
                 if position not in odwiedzone_pola:
                     odwiedzone_pola.append(position)
                 else:
-                    cofniecia+=1
+                    cofniecia += 1
             else:
-                uderzenia+=1
+                uderzenia += 1
 
         elif ruch == 1:  # gora
             kolejne_pole = labirynt[position[1] - 1][position[0]]
@@ -164,10 +161,10 @@ def rysowanie(solution, solution_idx):
                 if position not in odwiedzone_pola:
                     odwiedzone_pola.append(position)
                 else:
-                    cofniecia+=1
+                    cofniecia += 1
             else:
-                uderzenia+=1
-        # position = [1,1]
+                uderzenia += 1
+
         elif ruch == 2:  # prawo
             kolejne_pole = labirynt[position[1]][position[0] + 1]
 
@@ -176,9 +173,9 @@ def rysowanie(solution, solution_idx):
                 if position not in odwiedzone_pola:
                     odwiedzone_pola.append(position)
                 else:
-                    cofniecia+=1
+                    cofniecia += 1
             else:
-                uderzenia+=1
+                uderzenia += 1
 
         elif ruch == 3:  # dol
             kolejne_pole = labirynt[position[1] + 1][position[0]]
@@ -187,18 +184,18 @@ def rysowanie(solution, solution_idx):
                 if position not in odwiedzone_pola:
                     odwiedzone_pola.append(position)
                 else:
-                    cofniecia+=1
+                    cofniecia += 1
             else:
-                uderzenia+=1
+                uderzenia += 1
         if exit_coord in odwiedzone_pola:
-            print(f"ZNALEZIONO WYJSCIE!!, w {len(odwiedzone_pola)} krokach")
+            print(f"ZNALEZIONO WYJSCIE!!, w {len(odwiedzone_pola)-1} krokach")
             break
     print(odwiedzone_pola)
-    print("uderzenia w ścianę: ",uderzenia)
-    print("cofnięcia: ",cofniecia)
+    print("uderzenia w ścianę: ", uderzenia)
+    print("cofnięcia: ", cofniecia)
 
 
-rysowanie(solution, 1)
+rysowanie(solution)
 ga_instance.plot_fitness()
 
 '''
@@ -211,7 +208,5 @@ Parameters of the best solution: [1. 1. 2. 2. 3. 2. 2. 1. 2. 2. 3. 3. 3. 0. 0. 3
  2. 2. 2. 3. 2. 3.]
 Fitness value of the best solution  = -6
 
-Parameters of the best solution: [2. 3. 3. 2. 3. 2. 3. 3. 1. 2. 1. 2. 2. 3. 3. 3. 0. 3. 2. 3. 3. 3. 0. 3.
- 3. 2. 1. 2. 2. 2.]
-Fitness value of the best solution  = -6
+
 '''
