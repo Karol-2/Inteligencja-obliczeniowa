@@ -1,3 +1,5 @@
+import time
+
 import pygad
 
 labirynt = [
@@ -36,7 +38,7 @@ def fitness_func(solution, solution_idx):
     position = start_coord
     odwiedzone_pola = [position]
     karne_punkty = 0
-    dobre_punkty = 0
+
     cofanie_kara = 2
     sciana_kara = 1
 
@@ -47,7 +49,7 @@ def fitness_func(solution, solution_idx):
                 position = [position[0] - 1, position[1]]  # jeśli nie ściana to wchodzimy
                 if position not in odwiedzone_pola:  # sprawdzenie czy już tu nie byliśmy wczesniej
                     odwiedzone_pola.append(position)  # jeśli nowe pole dodajemy pozytywne pkt
-                    dobre_punkty += 5
+
                 else:
                     karne_punkty += cofanie_kara  # kara za chodzenie po poprzednich polach
 
@@ -60,9 +62,9 @@ def fitness_func(solution, solution_idx):
                 position = [position[0], position[1] - 1]
                 if position not in odwiedzone_pola:
                     odwiedzone_pola.append(position)
-                    dobre_punkty += 5
+
                 else:
-                    karne_punkty += cofanie_kara  # kara za cofanie się
+                    karne_punkty += cofanie_kara
             else:
                 karne_punkty += sciana_kara
 
@@ -73,9 +75,9 @@ def fitness_func(solution, solution_idx):
                 position = [position[0] + 1, position[1]]
                 if position not in odwiedzone_pola:
                     odwiedzone_pola.append(position)
-                    dobre_punkty += 5
+
                 else:
-                    karne_punkty += cofanie_kara  # kara za cofanie się
+                    karne_punkty += cofanie_kara
 
             else:
                 karne_punkty += sciana_kara
@@ -86,9 +88,9 @@ def fitness_func(solution, solution_idx):
                 position = [position[0], position[1] + 1]
                 if position not in odwiedzone_pola:
                     odwiedzone_pola.append(position)
-                    dobre_punkty += 5
+
                 else:
-                    karne_punkty += cofanie_kara  # kara za cofanie się
+                    karne_punkty += cofanie_kara
             else:
                 karne_punkty += sciana_kara
 
@@ -97,26 +99,20 @@ def fitness_func(solution, solution_idx):
 
 fitness_function = fitness_func
 
-# ile chromsomów w populacji
-# ile genow ma chromosom
-sol_per_pop = 200
-num_genes = max_kroki
+sol_per_pop = 200  # ile chromsomów w populacji
+num_genes = max_kroki  # ile genow ma chromosom
 
-# ile wylaniamy rodzicow do "rozmanazania" (okolo 50% populacji)
-# ile pokolen
-# ilu rodzicow zachowac (kilka procent)
-num_parents_mating = 25
-num_generations = 200
-keep_parents = 2
+num_parents_mating = 25  # ile wylaniamy rodzicow do "rozmanazania" (okolo 50% populacji)
+num_generations = 200  # ile pokolen
+keep_parents = 2  # ilu rodzicow zachowac (kilka procent)
 
 parent_selection_type = "sss"
 crossover_type = "single_point"
 
-# mutacja ma dzialac na ilu procent genow?
-# trzeba pamietac ile genow ma chromosom
-mutation_type = "random"
-mutation_percent_genes = 4
+mutation_type = "random"  # mutacja ma dzialac na ilu procent genow?
+mutation_percent_genes = 4  # trzeba pamietac ile genow ma chromosom
 
+start = time.time()
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
@@ -130,10 +126,12 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        mutation_percent_genes=mutation_percent_genes)
 
 ga_instance.run()
+end = time.time()
 
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
 print("Parameters of the best solution: {solution}".format(solution=solution))
-print("Fitness value of the best solution  = {solution_fitness}".format(solution_fitness=solution_fitness))
+print("Fitness = {solution_fitness}".format(solution_fitness=solution_fitness))
+print("Obliczono w czasie: ", end - start, "s.")
 
 
 def rysowanie(solution):
@@ -188,7 +186,7 @@ def rysowanie(solution):
             else:
                 uderzenia += 1
         if exit_coord in odwiedzone_pola:
-            print(f"ZNALEZIONO WYJSCIE!!, w {len(odwiedzone_pola)-1} krokach")
+            print(f"ZNALEZIONO WYJSCIE!!\nw {len(odwiedzone_pola)-1} krokach")
             break
     print(odwiedzone_pola)
     print("uderzenia w ścianę: ", uderzenia)
@@ -204,9 +202,21 @@ Parameters of the best solution: [2. 2. 3. 3. 0. 0. 3. 3. 2. 3. 2. 3. 2. 1. 2. 1
 Fitness value of the best solution  = -2
 [[1, 1], [2, 1], [3, 1], [3, 2], [3, 3], [2, 3], [1, 3], [1, 4], [1, 5], [2, 5], [2, 6], [3, 6], [3, 7], [4, 7], [4, 6], [5, 6], [5, 5], [6, 5], [6, 4], [7, 4], [7, 5], [7, 6], [8, 6], [9, 6], [9, 7], [10, 7], [10, 8], [10, 9], [10, 10]]
 
-Parameters of the best solution: [1. 1. 2. 2. 3. 2. 2. 1. 2. 2. 3. 3. 3. 0. 0. 3. 3. 2. 3. 3. 3. 0. 3. 3.
- 2. 2. 2. 3. 2. 3.]
-Fitness value of the best solution  = -6
+'''
 
+'''
+Index - Czas
+1 - 2.4201695919036865
+2 - 2.468787670135498
+3 - 2.208211898803711
+4 - 2.163158416748047
+5 - 2.282962322235107
+6 - 2.082779884338379
+7 - 2.1157240867614746
+8 - 2.5850048065185547
+9 - 2.088573694229126
+10 - 2.0761518478393555
+
+ŚREDNI CZAS = 2.2676 s.
 
 '''
