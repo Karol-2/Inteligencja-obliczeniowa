@@ -17,7 +17,7 @@ def f(x):
     return np.array(j)
 
 
-options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}  # w - współcznynnik bezwładności, c1 - cognitive parameter, c2 - social parameter
 x_max = np.ones(6)
 x_min = np.zeros(6)
 my_bounds = (x_min, x_max)
