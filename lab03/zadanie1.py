@@ -5,7 +5,7 @@ import pygad
 
 
 # definiujemy parametry chromosomu
-# geny to liczby: 0 lub 1
+# geny to liczby: 0 do 1
 
 def losuj():
     return random.uniform(0, 1)
@@ -48,7 +48,7 @@ crossover_type = "single_point"
 # mutacja ma dzialac na ilu procent genow?
 # trzeba pamietac ile genow ma chromosom
 mutation_type = "random"
-mutation_percent_genes = 20  # gdy jest na 5 to wyniki 2.7 - 2.8
+mutation_percent_genes = 20
 
 
 ga_instance = pygad.GA(gene_space=gene_space,

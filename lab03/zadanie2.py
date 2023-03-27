@@ -94,12 +94,15 @@ def fitness_func(solution, solution_idx):
             else:
                 karne_punkty += sciana_kara
 
+        if position == exit_coord:
+            return -odleglosc(position, exit_coord) - karne_punkty
+
     return -odleglosc(position, exit_coord) - karne_punkty
 
 
 fitness_function = fitness_func
 
-sol_per_pop = 200  # ile chromsomów w populacji
+sol_per_pop = 144  # ile chromsomów w populacji
 num_genes = max_kroki  # ile genow ma chromosom
 
 num_parents_mating = 25  # ile wylaniamy rodzicow do "rozmanazania" (okolo 50% populacji)

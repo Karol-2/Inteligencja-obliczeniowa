@@ -29,3 +29,4 @@ cost_history = optimizer.cost_history
 
 plot_cost_history(cost_history)
 plt.show()
+print("Najlepszy wynik: ", abs(cost_history[-1]))
