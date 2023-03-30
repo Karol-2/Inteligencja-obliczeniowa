@@ -123,10 +123,25 @@ def fitness_func(solution,solution_idx):
         else:
             kara += 10
 
-        if find_path(macierz,start_pozycja,stop_pozycja):
-            punkty +=10
-        else:
-            kara += 10
+        visited = set()  # zbiór odwiedzonych wierzchołków
+        stack = [start_pozycja]  # stos wierzchołków do odwiedzenia
+        while stack:
+            current = stack.pop()  # pobierz ostatni wierzchołek ze stosu
+            if current == stop_pozycja:  # jeśli znaleziono cel
+                punkty +=50
+                break
+            visited.add(current)  # dodaj do odwiedzonych
+            # znajdź sąsiadujące wierzchołki, które nie są odwiedzone
+            neighbors = [(current[0] - 1,current[1]),(current[0] + 1,current[1]),
+                         (current[0],current[1] - 1),(current[0],current[1] + 1)]
+            for neighbor in neighbors:
+                if neighbor[0] < 0 or neighbor[0] >= len(macierz) \
+                        or neighbor[1] < 0 or neighbor[1] >= len(macierz[0]):
+                    continue  # pomijaj wierzchołki poza granicami macierzy
+                if macierz[neighbor[0]][neighbor[1]] == macierz[start_pozycja[0]][start_pozycja[1]] \
+                        and neighbor not in visited:
+                    stack.append(neighbor)  # dodaj do stosu do odwiedzenia
+     #   return False  # nie znaleziono połączenia
 
     return -(-punkty + (brak_obowiazkowych_pol * 1000) + kara)
 
@@ -170,4 +185,30 @@ solution,solution_fitness,solution_idx = ga_instance.best_solution()
 print(list(solution))
 print("Parameters of the best solution:\n {solution}".format(solution=np.array(solution).reshape((9,9))))
 print("Fitness = {solution_fitness}".format(solution_fitness=solution_fitness))
-# ga_instance.plot_fitness()
+ga_instance.plot_fitness()
+
+idealne = [
+    [0,0,1,1,1,1,1,1,1],
+    [1,0,1,2,2,2,2,2,2],
+    [1,0,1,2,3,3,3,4,1],
+    [1,0,1,2,2,2,3,4,2],
+    [1,0,1,5,5,5,3,4,1],
+    [1,0,1,5,3,3,3,4,1],
+    [1,0,1,5,4,4,4,4,1],
+    [1,1,1,5,6,6,6,6,2],
+    [5,5,5,5,2,2,2,2,2]
+
+]
+def compare_matrices(matrix1, matrix2):
+    n = len(matrix1)
+    m = len(matrix1[0])
+    same_count = 0
+
+    for i in range(n):
+        for j in range(m):
+            if matrix1[i][j] == matrix2[i][j]:
+                same_count += 1
+
+    return str((same_count / (n*m)) * 100) + "%"
+
+print(compare_matrices(idealne,solution.reshape((9,9))))
