@@ -1,8 +1,7 @@
 import numpy as np
 import pygad
+import time
 import csv
-from functools import reduce
-
 
 
 def zapisz_indeksy(plansza):
@@ -62,6 +61,7 @@ def punkt_nie_solo(macierz,i,j):
 
     return False
 
+
 def porownaj_macierze(macierzA,macierzB):
     """
     Funkcja która porównuje procentowe podobieństwo naszego rozwiązania i idealnego
@@ -76,6 +76,8 @@ def porownaj_macierze(macierzA,macierzB):
                 te_same += 1
 
     return str((te_same / (n * m)) * 100) + "% idealnego rozwiązania"
+
+
 def wiecej_niz_2(macierz,wymagane_pola):
     """
     Funkcja przechodzi przez cały macierz i sprawdza czy każdy element oprócz poł start/stop ma 2 sąsiadów
@@ -97,6 +99,8 @@ def wiecej_niz_2(macierz,wymagane_pola):
             if ilosc != 2:
                 return True
     return False
+
+
 def fitness_func(solution,solution_idx):
     punkty = 0
     suma_dlugosci = 0
@@ -112,12 +116,19 @@ def fitness_func(solution,solution_idx):
              kara jest podana w tysiącach, bo nie możemy pozwolić aby nie było tych wartości
              '''
 
-     # Sprawdzamy, czy w macierzy nie znajdują się żadne samotne punkty bez żadnego połączenia
+    '''
+    Sprawdzamy, czy w macierzy nie znajdują się żadne samotne punkty bez żadnego połączenia
+    oprócz miejsc start/stop
+    '''
     for i in range(len(macierz)):
-        for j in range(len(macierz[0])):  # oprócz miejsc start/stop
+        for j in range(len(macierz[0])):
             if macierz[i][j] not in wymagane_pola and not punkt_nie_solo(macierz,i,j):
                 kara += 200
 
+    '''
+    Sprawdzamy, czy w macierzy nie znajdują się żadne punkty mają więcej niż 2 sąsiadów bez żadnego połączenia
+    oprócz miejsc start/stop
+    '''
     if not wiecej_niz_2(macierz,wymagane_pola):
         punkty += 300
     else:
@@ -161,13 +172,16 @@ def fitness_func(solution,solution_idx):
             kara += 70
 
         # algorytm DFS, do przeszukania macierzy według aktualnej liczby
+        '''
+        Z użyciem algorytm DFS,przeszukujemy macierz według aktualnej liczby( czyli po 0,1,2...)
+        '''
 
         visited = set()  # zbiór odwiedzonych wierzchołków
         stack = [start_pozycja]  # stos wierzchołków do odwiedzenia
         while stack:
             current = stack.pop()  # pobierz ostatni wierzchołek ze stosu
             if current == stop_pozycja:  # jeśli znaleziono cel
-                punkty += 50
+                punkty += 50 # nagradzanie znalezienia ścieżki
                 break
             visited.add(current)  # dodaj do odwiedzonych
             suma_dlugosci += 1  # zachęcanie szukania kolejnych wierzchołków
@@ -203,7 +217,11 @@ idealne = [
 
 wymagane_pola = zapisz_indeksy(plansza)
 rozmiar = len(plansza) * len(plansza)
-liczby_do_polaczenia = reduce(lambda re,x: re + [x] if x not in re else re,wymagane_pola.values(),[])
+liczby_do_polaczenia = []
+
+for x in wymagane_pola.values():
+    if x not in liczby_do_polaczenia:
+        liczby_do_polaczenia.append(x)
 
 gene_space = liczby_do_polaczenia
 fitness_function = fitness_func
@@ -221,6 +239,7 @@ crossover_type = "single_point" #typ łączenia
 mutation_type = "random"  # mutacja ma dzialac na ilu procent genow?
 mutation_percent_genes = 15  # trzeba pamietac ile genow ma chromosom
 
+start = time.time()
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
@@ -234,13 +253,16 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        mutation_percent_genes=mutation_percent_genes)
 
 ga_instance.run()
+end = time.time()
 
 solution,solution_fitness,solution_idx = ga_instance.best_solution()
-print("Parameters of the best solution:\n {solution}".format(solution=np.array(solution).reshape((5,5))))
+print(list(solution))
+print("Parameters of the best solution:\n {solution}".format(solution=np.array(solution).reshape((len(plansza),len(plansza)))))
 print("Fitness = {solution_fitness}".format(solution_fitness=solution_fitness))
 print(porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza)))))
+print("Obliczono w czasie: ", end - start, "s.")
 ga_instance.plot_fitness()
-print(list(solution))
+
 
 with open('plik.csv',mode='a') as plik_csv:
     writer = csv.writer(plik_csv)
