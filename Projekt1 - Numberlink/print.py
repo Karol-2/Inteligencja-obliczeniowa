@@ -7,7 +7,7 @@ from functools import reduce
 
 def zapisz_indeksy(plansza):
     """
-    Funkcja analizuje plansze iu w formie sÅ‚ownika zapisuje wymagane pola - ich koordynaty i wartoÅ›Ä‡
+    Funkcja analizuje plansze iu w formie s³ownika zapisuje wymagane pola - ich koordynaty i wartoœæ
     """
     indeksy = {}
     for i in range(len(plansza)):
@@ -19,7 +19,7 @@ def zapisz_indeksy(plansza):
 
 def sprawdz_sasiedztwo(macierz,pos_x,pos_y,wartosc):
     """
-    Funkcja sprawdza czy dla pola o podanych koordynatach jest inne z tÄ… samÄ… wartosciÄ…
+    Funkcja sprawdza czy dla pola o podanych koordynatach jest inne z t¹ sam¹ wartosci¹
     """
     if pos_x > 0 and macierz[pos_x - 1][pos_y] == wartosc:
         return True
@@ -34,7 +34,7 @@ def sprawdz_sasiedztwo(macierz,pos_x,pos_y,wartosc):
 
 def czy_ma_dwoch_sasiadow(macierz,x,y):
     """
-    Funkcja sprawdza czy dla pola o podanych koordynatach jest TYLKo 2 sÄ…siadÃ³w, jeÅ›li jest inaczej zwraca False
+    Funkcja sprawdza czy dla pola o podanych koordynatach jest TYLKo 2 s¹siadów, jeœli jest inaczej zwraca False
     """
     wartosc = macierz[y][x]
     sasiedzi = [(x - 1,y),(x + 1,y),(x,y - 1),(x,y + 1)]
@@ -49,8 +49,8 @@ def czy_ma_dwoch_sasiadow(macierz,x,y):
 
 def punkt_nie_solo(macierz,i,j):
     """
-    Sprawdza, czy w macierzy 'matrix' w pozycji (i,j) znajduje siÄ™ liczba, ktÃ³ra nie ma Å¼adnego sÄ…siada o tej samej wartoÅ›ci.
-    czyli szuka solowych punktÃ³w
+    Sprawdza, czy w macierzy 'matrix' w pozycji (i,j) znajduje siê liczba 0, 1 lub 2, która nie ma ¿adnego s¹siada o tej samej wartoœci.
+    czyli szuka solowych punktów
     """
     wartosc = macierz[i][j]
     sasiedzi = [(i - 1,j),(i + 1,j),(i,j - 1),(i,j + 1)]
@@ -64,7 +64,7 @@ def punkt_nie_solo(macierz,i,j):
 
 def porownaj_macierze(macierzA,macierzB):
     """
-    Funkcja ktÃ³ra porÃ³wnuje procentowe podobieÅ„stwo naszego rozwiÄ…zania i idealnego
+    Funkcja która porównuje procentowe podobieñstwo naszego rozwi¹zania i idealnego
     """
     n = len(macierzA)
     m = len(macierzA[0])
@@ -75,55 +75,53 @@ def porownaj_macierze(macierzA,macierzB):
             if macierzA[i][j] == macierzB[i][j]:
                 te_same += 1
 
-    return str((te_same / (n * m)) * 100) + "% idealnego rozwiÄ…zania"
-def wiecej_niz_2(macierz,wymagane_pola):
-    """
-    Funkcja przechodzi przez caÅ‚y macierz i sprawdza czy kaÅ¼dy element oprÃ³cz poÅ‚ start/stop ma 2 sÄ…siadÃ³w
-    """
-    for i in range(len(macierz)):
-        for j in range(len(macierz[i])):
-            if (i, j) in wymagane_pola:
+    return str((te_same / (n * m)) * 100) + "% idealnego rozwi¹zania"
+def wiecej_niz_2(matrix,wymagane_pole):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if (i, j) in wymagane_pole:
                 continue
-            wartos = macierz[i][j]
-            ilosc = 0
-            for x in range(max(0, i-1),min(len(macierz),i + 2)):
-                for y in range(max(0, j-1),min(len(macierz[i]),j + 2)):
-                    if (x, y) in wymagane_pola:
+            value = matrix[i][j]
+            count = 0
+            for x in range(max(0, i-1), min(len(matrix), i+2)):
+                for y in range(max(0, j-1), min(len(matrix[i]), j+2)):
+                    if (x, y) in wymagane_pole:
                         continue
                     if x == i and y == j:
                         continue
-                    if macierz[x][y] == wartos:
-                        ilosc += 1
-            if ilosc != 2:
+                    if matrix[x][y] == value:
+                        count += 1
+            if count != 2:
+               # print("NIE MA")
                 return True
     return False
 def fitness_func(solution,solution_idx):
     punkty = 0
     suma_dlugosci = 0
     kara = 0
-    macierz = np.array(solution).reshape((len(plansza),len(plansza)))  # zmieniamy tablicÄ™ liczb w macierz
+    macierz = np.array(solution).reshape((len(plansza),len(plansza)))  # zmieniamy tablicê liczb w macierz
     brak_obowiazkowych_pol = 0
 
-    for wiersz,kolumna in wymagane_pola.keys():  # na poczÄ…tku sprawdzamy czy wymagane wartoÅ›ci podane na planszy istniejÄ…
+    for wiersz,kolumna in wymagane_pola.keys():  # na pocz¹tku sprawdzamy czy wymagane wartoœci podane na planszy istniej¹
         if macierz[wiersz][kolumna] != wymagane_pola[(wiersz,kolumna)]:
             brak_obowiazkowych_pol += 1000
             '''
-             iloÅ›Ä‡ brakujÄ…cych pÃ³l wlicza siÄ™ do ostatecznej wartoÅ›ci fitness
-             kara jest podana w tysiÄ…cach, bo nie moÅ¼emy pozwoliÄ‡ aby nie byÅ‚o tych wartoÅ›ci
+             iloœæ brakuj¹cych pól wlicza siê do ostatecznej wartoœci fitness
+             kara jest podana w tysi¹cach, bo nie mo¿emy pozwoliæ aby nie by³o tych wartoœci
              '''
 
-     # Sprawdzamy, czy w macierzy nie znajdujÄ… siÄ™ Å¼adne samotne punkty bez Å¼adnego poÅ‚Ä…czenia
+     # Sprawdzamy, czy w macierzy nie znajduj¹ siê ¿adne samotne punkty bez ¿adnego po³¹czenia
     for i in range(len(macierz)):
-        for j in range(len(macierz[0])):  # oprÃ³cz miejsc start/stop
+        for j in range(len(macierz[0])):  # oprócz miejsc start/stop
             if macierz[i][j] not in wymagane_pola and not punkt_nie_solo(macierz,i,j):
                 kara += 200
 
     if not wiecej_niz_2(macierz,wymagane_pola):
-        punkty += 300
+        punkty += 100
     else:
         kara +=200
 
-    for liczba in liczby_do_polaczenia:  # interujemy po kaÅ¼dej liczbie
+    for liczba in liczby_do_polaczenia:  # interujemy po ka¿dej liczbie
         key_list = list(wymagane_pola.keys())
         val_list = list(wymagane_pola.values())
         pos = val_list.index(liczba)
@@ -131,13 +129,13 @@ def fitness_func(solution,solution_idx):
         start_pozycja = 0
         stop_pozycja = 0
 
-        for key,value in wymagane_pola.items():  # szukamy w wymaganych polach koordynatÃ³w miejsa startu dla danej liczby
+        for key,value in wymagane_pola.items():  # szukamy w wymaganych polach koordynatów miejsa startu dla danej liczby
             if value == 0:
                 start_pozycja = key
                 break
         count_zero = 0
 
-        for key,value in wymagane_pola.items():  # szukamy w wymaganych polach koordynatÃ³w miejsa stopu dla danej liczby
+        for key,value in wymagane_pola.items():  # szukamy w wymaganych polach koordynatów miejsa stopu dla danej liczby
             if value == 0:
                 count_zero += 1
                 if count_zero == 2:
@@ -149,35 +147,35 @@ def fitness_func(solution,solution_idx):
 
         if (pos_x,pos_y) not in wymagane_pola:  # pomijamy pola start/stop
             if czy_ma_dwoch_sasiadow(macierz,pos_x,
-                                     pos_y):  # sprawdzamy czy dla danych koordynatÃ³w jest dokÅ‚adnie 2 sÄ…saidÃ³w
+                                     pos_y):  # sprawdzamy czy dla danych koordynatów jest dok³adnie 2 s¹saidów
                 punkty += 50
             else:
                 kara += 50
 
-        # #sprawdzanie czy pole startowe ma sÄ…siada
+        # #sprawdzanie czy pole startowe ma s¹siada
         if sprawdz_sasiedztwo(macierz,pos_x,pos_y,liczba):
             punkty += 50
         else:
             kara += 70
 
-        # algorytm DFS, do przeszukania macierzy wedÅ‚ug aktualnej liczby
+        # algorytm DFS, do przeszukania macierzy wed³ug aktualnej liczby
 
-        visited = set()  # zbiÃ³r odwiedzonych wierzchoÅ‚kÃ³w
-        stack = [start_pozycja]  # stos wierzchoÅ‚kÃ³w do odwiedzenia
+        visited = set()  # zbiór odwiedzonych wierzcho³ków
+        stack = [start_pozycja]  # stos wierzcho³ków do odwiedzenia
         while stack:
-            current = stack.pop()  # pobierz ostatni wierzchoÅ‚ek ze stosu
-            if current == stop_pozycja:  # jeÅ›li znaleziono cel
+            current = stack.pop()  # pobierz ostatni wierzcho³ek ze stosu
+            if current == stop_pozycja:  # jeœli znaleziono cel
                 punkty += 50
                 break
             visited.add(current)  # dodaj do odwiedzonych
-            suma_dlugosci += 1  # zachÄ™canie szukania kolejnych wierzchoÅ‚kÃ³w
+            suma_dlugosci += 1  # zachêcanie szukania kolejnych wierzcho³ków
 
-            # znajdÅº sÄ…siadujÄ…ce wierzchoÅ‚ki, ktÃ³re nie sÄ… odwiedzone
+            # znajdŸ s¹siaduj¹ce wierzcho³ki, które nie s¹ odwiedzone
             neighbors = [(current[0] - 1,current[1]),(current[0] + 1,current[1]),
                          (current[0],current[1] - 1),(current[0],current[1] + 1)]
             for neighbor in neighbors:
                 if neighbor[0] < 0 or neighbor[0] >= len(macierz) or neighbor[1] < 0 or neighbor[1] >= len(macierz[0]):
-                    continue  # pomijaj wierzchoÅ‚ki poza granicami macierzy
+                    continue  # pomijaj wierzcho³ki poza granicami macierzy
                 if macierz[neighbor[0]][neighbor[1]] == macierz[start_pozycja[0]][start_pozycja[1]] \
                         and neighbor not in visited:
                     stack.append(neighbor)  # dodaj do stosu do odwiedzenia
@@ -208,40 +206,40 @@ liczby_do_polaczenia = reduce(lambda re,x: re + [x] if x not in re else re,wymag
 gene_space = liczby_do_polaczenia
 fitness_function = fitness_func
 
-sol_per_pop = 80  # iloÅ›Ä‡ chromsomÃ³w w populacji
-num_genes = rozmiar  # iloÅ›Ä‡ genow w chromosomie
+sol_per_pop = 80  # iloœæ chromsomów w populacji
+num_genes = rozmiar  # iloœæ genow w chromosomie
 
 num_parents_mating = 40  # (okolo 50% populacji)
-num_generations = 5000  # ilosc pokolen
+num_generations = 4000  # ilosc pokolen
 keep_parents = 5  # ilosc rodzicow do zachowania
 
 parent_selection_type = "sss" # typ seleckji
-crossover_type = "single_point" #typ Å‚Ä…czenia
+crossover_type = "single_point" #typ ³¹czenia
 
 mutation_type = "random"  # mutacja ma dzialac na ilu procent genow?
 mutation_percent_genes = 15  # trzeba pamietac ile genow ma chromosom
+for i in range(101):
+    ga_instance = pygad.GA(gene_space=gene_space,
+                           num_generations=num_generations,
+                           num_parents_mating=num_parents_mating,
+                           fitness_func=fitness_function,
+                           sol_per_pop=sol_per_pop,
+                           num_genes=num_genes,
+                           parent_selection_type=parent_selection_type,
+                           keep_parents=keep_parents,
+                           crossover_type=crossover_type,
+                           mutation_type=mutation_type,
+                           mutation_percent_genes=mutation_percent_genes)
 
-ga_instance = pygad.GA(gene_space=gene_space,
-                       num_generations=num_generations,
-                       num_parents_mating=num_parents_mating,
-                       fitness_func=fitness_function,
-                       sol_per_pop=sol_per_pop,
-                       num_genes=num_genes,
-                       parent_selection_type=parent_selection_type,
-                       keep_parents=keep_parents,
-                       crossover_type=crossover_type,
-                       mutation_type=mutation_type,
-                       mutation_percent_genes=mutation_percent_genes)
+    ga_instance.run()
+    print(i)
+    solution,solution_fitness,solution_idx = ga_instance.best_solution()
+    #print("Parameters of the best solution:\n {solution}".format(solution=np.array(solution).reshape((5,5))))
+    #print("Fitness = {solution_fitness}".format(solution_fitness=solution_fitness))
+    #print(porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza)))))
+    #ga_instance.plot_fitness()
+    #print(list(solution))
 
-ga_instance.run()
-
-solution,solution_fitness,solution_idx = ga_instance.best_solution()
-print("Parameters of the best solution:\n {solution}".format(solution=np.array(solution).reshape((5,5))))
-print("Fitness = {solution_fitness}".format(solution_fitness=solution_fitness))
-print(porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza)))))
-ga_instance.plot_fitness()
-print(list(solution))
-
-with open('plik.csv',mode='a') as plik_csv:
-    writer = csv.writer(plik_csv)
-    writer.writerow([solution,porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza))))])
+    with open('plik.csv',mode='a') as plik_csv:
+        writer = csv.writer(plik_csv)
+        writer.writerow([i, solution,porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza))))])

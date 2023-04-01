@@ -49,7 +49,7 @@ def czy_ma_dwoch_sasiadow(macierz,x,y):
 
 def punkt_nie_solo(macierz,i,j):
     """
-    Sprawdza, czy w macierzy 'matrix' w pozycji (i,j) znajduje się liczba, która nie ma żadnego sąsiada o tej samej wartości.
+    Sprawdza, czy w macierzy 'matrix' w pozycji (i,j) znajduje się liczba 0, 1 lub 2, która nie ma żadnego sąsiada o tej samej wartości.
     czyli szuka solowych punktów
     """
     wartosc = macierz[i][j]
@@ -76,25 +76,23 @@ def porownaj_macierze(macierzA,macierzB):
                 te_same += 1
 
     return str((te_same / (n * m)) * 100) + "% idealnego rozwiązania"
-def wiecej_niz_2(macierz,wymagane_pola):
-    """
-    Funkcja przechodzi przez cały macierz i sprawdza czy każdy element oprócz poł start/stop ma 2 sąsiadów
-    """
-    for i in range(len(macierz)):
-        for j in range(len(macierz[i])):
-            if (i, j) in wymagane_pola:
+def wiecej_niz_2(matrix,wymagane_pole):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if (i, j) in wymagane_pole:
                 continue
-            wartos = macierz[i][j]
-            ilosc = 0
-            for x in range(max(0, i-1),min(len(macierz),i + 2)):
-                for y in range(max(0, j-1),min(len(macierz[i]),j + 2)):
-                    if (x, y) in wymagane_pola:
+            value = matrix[i][j]
+            count = 0
+            for x in range(max(0, i-1), min(len(matrix), i+2)):
+                for y in range(max(0, j-1), min(len(matrix[i]), j+2)):
+                    if (x, y) in wymagane_pole:
                         continue
                     if x == i and y == j:
                         continue
-                    if macierz[x][y] == wartos:
-                        ilosc += 1
-            if ilosc != 2:
+                    if matrix[x][y] == value:
+                        count += 1
+            if count != 2:
+               # print("NIE MA")
                 return True
     return False
 def fitness_func(solution,solution_idx):
@@ -119,7 +117,7 @@ def fitness_func(solution,solution_idx):
                 kara += 200
 
     if not wiecej_niz_2(macierz,wymagane_pola):
-        punkty += 300
+        punkty += 100
     else:
         kara +=200
 
@@ -212,7 +210,7 @@ sol_per_pop = 80  # ilość chromsomów w populacji
 num_genes = rozmiar  # ilość genow w chromosomie
 
 num_parents_mating = 40  # (okolo 50% populacji)
-num_generations = 5000  # ilosc pokolen
+num_generations = 4000  # ilosc pokolen
 keep_parents = 5  # ilosc rodzicow do zachowania
 
 parent_selection_type = "sss" # typ seleckji
@@ -220,28 +218,28 @@ crossover_type = "single_point" #typ łączenia
 
 mutation_type = "random"  # mutacja ma dzialac na ilu procent genow?
 mutation_percent_genes = 15  # trzeba pamietac ile genow ma chromosom
+for i in range(101):
+    ga_instance = pygad.GA(gene_space=gene_space,
+                           num_generations=num_generations,
+                           num_parents_mating=num_parents_mating,
+                           fitness_func=fitness_function,
+                           sol_per_pop=sol_per_pop,
+                           num_genes=num_genes,
+                           parent_selection_type=parent_selection_type,
+                           keep_parents=keep_parents,
+                           crossover_type=crossover_type,
+                           mutation_type=mutation_type,
+                           mutation_percent_genes=mutation_percent_genes)
 
-ga_instance = pygad.GA(gene_space=gene_space,
-                       num_generations=num_generations,
-                       num_parents_mating=num_parents_mating,
-                       fitness_func=fitness_function,
-                       sol_per_pop=sol_per_pop,
-                       num_genes=num_genes,
-                       parent_selection_type=parent_selection_type,
-                       keep_parents=keep_parents,
-                       crossover_type=crossover_type,
-                       mutation_type=mutation_type,
-                       mutation_percent_genes=mutation_percent_genes)
+    ga_instance.run()
+    print(i)
+    solution,solution_fitness,solution_idx = ga_instance.best_solution()
+    #print("Parameters of the best solution:\n {solution}".format(solution=np.array(solution).reshape((5,5))))
+    #print("Fitness = {solution_fitness}".format(solution_fitness=solution_fitness))
+    #print(porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza)))))
+    #ga_instance.plot_fitness()
+    #print(list(solution))
 
-ga_instance.run()
-
-solution,solution_fitness,solution_idx = ga_instance.best_solution()
-print("Parameters of the best solution:\n {solution}".format(solution=np.array(solution).reshape((5,5))))
-print("Fitness = {solution_fitness}".format(solution_fitness=solution_fitness))
-print(porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza)))))
-ga_instance.plot_fitness()
-print(list(solution))
-
-with open('plik.csv',mode='a') as plik_csv:
-    writer = csv.writer(plik_csv)
-    writer.writerow([solution,porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza))))])
+    with open('plik.csv',mode='a') as plik_csv:
+        writer = csv.writer(plik_csv)
+        writer.writerow([i, solution,porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza))))])
