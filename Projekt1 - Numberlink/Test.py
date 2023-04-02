@@ -431,7 +431,7 @@ sredniei = [idealne_8x8_1, idealne_8x8_2,idealne_8x8_3]
 duzei = [idealne_11x11_1, idealne_11x11_2,idealne_11x11_3]
 
 
-for i in range(3):
+for i in range(100):
     liczba = losuj_liczbe()
     plansza = male[liczba]
 
@@ -482,7 +482,7 @@ for i in range(3):
     with open('Male.txt', 'a') as file:
         file.write(f'{liczba};{list(solution)};{solution_fitness};{time_taken};{porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza))))}\n')
 
-for i in range(3):
+for i in range(100):
     liczba = losuj_liczbe()
     plansza = srednie[liczba]
 
@@ -533,7 +533,7 @@ for i in range(3):
     with open('Srednie.txt', 'a') as file:
         file.write(f'{liczba};{list(solution)};{solution_fitness};{time_taken};{porownaj_macierze(idealne,solution.reshape((len(plansza),len(plansza))))}\n')
 
-for i in range(3):
+for i in range(100):
     liczba = losuj_liczbe()
     plansza = duze[liczba]
 
