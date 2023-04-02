@@ -2,8 +2,8 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Projekt1 - Numberlink/Test.py" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/Projekt1 - Numberlink/drukowanie.py" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/Projekt1 - Numberlink/test2.py" charset="UTF-8" />
-    <file url="PROJECT" charset="windows-1250" />
+    <file url="file://$PROJECT_DIR$/Projekt1 - Numberlink/obliczenia.py" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Projekt1 - Numberlink/particlesy.py" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
