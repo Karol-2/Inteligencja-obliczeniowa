@@ -16,7 +16,7 @@ def f(x): # funkcja aktywacji
 
 # forwardPass(23,75,176) = 0.798528
 print(forwardPass(23, 75, 176))
-
+# 0.80094344704
 print(forwardPass(25,67,180))
 # wyniki sa bardzo bliskie oczekiwanym, różnice wynikają najprawdopodobniej z powodu zaokrągleń wyników
 
