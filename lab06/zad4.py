@@ -63,7 +63,7 @@ for optimizer_name in optimizers:
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
         plt.legend()
-        plt.savefig(f"{optimizer_name} - {activation_name} wykres.png",format="png")
+       # plt.savefig(f"{optimizer_name} - {activation_name} wykres.png",format="png")
         plt.show()
 
 
