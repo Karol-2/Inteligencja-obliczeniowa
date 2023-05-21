@@ -43,7 +43,8 @@ model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
 model.add(Dropout(0.2))
 model.add(Dense(y.shape[1], activation='softmax'))
 # load the network weights
-filename = "weights-improvement-01-2.9712.hdf5"
+#filename = "weights-improvement-03-2.7199.hdf5"
+filename = "IMPROVED-weights-improvement-03-2.5125.hdf5"
 model.load_weights(filename)
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 # pick a random seed
@@ -63,3 +64,16 @@ for i in range(500):
 	pattern.append(index)
 	pattern = pattern[1:len(pattern)]
 print("\nDone.")
+
+'''
+Poczatkowe: 
+" e could be no doubt that it had
+a _very_ turn-up nose, much more like a snout than a real nose; also "
+e th the tar  “he soet to the toe toe toe toe toe toe toe toe toe toe toe toe toe toet th the tar  “he soet to the toe toe toe toe toe toe toe toe toe toe toe toe toe toet th the tar  “he soet to the toe toe toe toe toe toe toe toe toe toe toe toe toe toet th the tar  “he soet to the toe toe toe toe toe toe toe toe toe toe toe toe toe toet th the tar  “he soet to the toe toe toe toe toe toe toe toe toe toe toe toe toe toet th the tar  “he soet to the toe toe toe toe toe toe toe toe toe toe toe t
+
+Dotrenowany:
+“suppose we change the subject,” the march hare interrupted, yawning.
+“i’m g "
+ sas io the wout an an an aale ”huh tou den to tee tou do whu ”hu soue tou de tou dal to tee tou do whu sou do whu sou do whu sou do whu so tee tou do an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an a
+
+'''
