@@ -76,4 +76,13 @@ Dotrenowany:
 “i’m g "
  sas io the wout an an an aale ”huh tou den to tee tou do whu ”hu soue tou de tou dal to tee tou do whu sou do whu sou do whu sou do whu so tee tou do an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an an a
 
+
+Generowanie tekstu rozpoczyna się od wybranego punktu startowego. Dla każdego kroku generowanych jest 500 znaków:
+Przygotowywane jest wejście modelu na podstawie aktualnego wzorca.
+Wejście jest normalizowane.
+Model przewiduje kolejny znak na podstawie wejścia.
+Wybrany indeks jest przekształcany w znak za pomocą słownika odwrotnego mapowania.
+Wyjście jest wyświetlane na standardowym wyjściu.
+Indeks jest dodawany do wzorca i wzorzec jest przycinany do rozmiaru seq_length.
+
 '''

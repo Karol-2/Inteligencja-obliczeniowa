@@ -83,4 +83,11 @@ Dotrenowane:
 Generated text:
 the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the , “ the 
 
+
+Przygotowywane jest wejście modelu na podstawie aktualnego wzorca.
+Wejście jest normalizowane.
+Model przewiduje kolejny token na podstawie wejścia.
+Wybrany indeks jest przekształcany w token za pomocą słownika odwrotnego mapowania.
+Wyjście jest wyświetlane na standardowym wyjściu.
+Indeks jest dodawany do wzorca i wzorzec jest przycinany do rozmiaru seq_length.
 '''
