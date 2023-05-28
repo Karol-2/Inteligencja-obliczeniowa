@@ -30,7 +30,7 @@ translate_to_english.call_counter = 0
 
 def q1():
     translate_to_english.call_counter = 0
-    df = pd.read_csv('cyberpunk_first_move.csv')
+    df = pd.read_csv('data_MIXED/cyberpunk_first_move.csv')
     df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
 
     df.to_csv('ENG_first_move.csv', index=False)
@@ -38,7 +38,7 @@ def q1():
 
 def q2():
     translate_to_english.call_counter = 0
-    df = pd.read_csv('cyberpunk_second_move.csv')
+    df = pd.read_csv('data_MIXED/cyberpunk_second_move.csv')
     df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
 
     df.to_csv('ENG_second_move.csv', index=False)
@@ -46,7 +46,7 @@ def q2():
 
 def q3():
     translate_to_english.call_counter = 0
-    df = pd.read_csv('cyberpunk_third_move.csv')
+    df = pd.read_csv('data_MIXED/cyberpunk_third_move.csv')
     df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
 
     df.to_csv('ENG_third_move.csv', index=False)
@@ -54,7 +54,7 @@ def q3():
 
 def q4():
     translate_to_english.call_counter = 0
-    df = pd.read_csv('cyberpunk_after_release.csv')
+    df = pd.read_csv('data_MIXED/cyberpunk_after_release.csv')
     df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
 
     df.to_csv('ENG_after_release.csv', index=False)
@@ -62,7 +62,7 @@ def q4():
 
 def q5():
     translate_to_english.call_counter = 0
-    df = pd.read_csv('cyberpunk_before_release.csv')
+    df = pd.read_csv('data_MIXED/cyberpunk_before_release.csv')
     df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
 
     df.to_csv('ENG_before_release.csv', index=False)
@@ -70,7 +70,7 @@ def q5():
 
 def q6():
     translate_to_english.call_counter = 0
-    df = pd.read_csv('cyberpunk_first_trailer.csv')
+    df = pd.read_csv('data_MIXED/cyberpunk_first_trailer.csv')
     df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
 
     df.to_csv('ENG_first_trailer.csv', index=False)
@@ -78,7 +78,7 @@ def q6():
 
 def q7():
     translate_to_english.call_counter = 0
-    df = pd.read_csv('cyberpunk_first_gameplay.csv')
+    df = pd.read_csv('data_MIXED/cyberpunk_first_gameplay.csv')
     df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
 
     df.to_csv('ENG_first_gameplay.csv', index=False)

@@ -34,7 +34,7 @@ def q1():
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'cyberpunk_first_trailer.csv'
+    csv_file = 'data_MIXED/cyberpunk_first_trailer.csv'
     save_to_csv(csv_file, tweets)
 
 
@@ -51,7 +51,7 @@ def q2():
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'cyberpunk_first_gameplay.csv'
+    csv_file = 'data_MIXED/cyberpunk_first_gameplay.csv'
     save_to_csv(csv_file, tweets)
 
 
@@ -68,7 +68,7 @@ def q3():
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'cyberpunk_first_move.csv'
+    csv_file = 'data_MIXED/cyberpunk_first_move.csv'
     save_to_csv(csv_file, tweets)
 
 
@@ -85,7 +85,7 @@ def q4():
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'cyberpunk_second_move.csv'
+    csv_file = 'data_MIXED/cyberpunk_second_move.csv'
     save_to_csv(csv_file, tweets)
 
 
@@ -102,7 +102,7 @@ def q5():
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'cyberpunk_third_move.csv'
+    csv_file = 'data_MIXED/cyberpunk_third_move.csv'
     save_to_csv(csv_file, tweets)
 
 def q6(): # dwa dni przed premiera
@@ -118,7 +118,7 @@ def q6(): # dwa dni przed premiera
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'cyberpunk_before_release.csv'
+    csv_file = 'data_MIXED/cyberpunk_before_release.csv'
     save_to_csv(csv_file, tweets)
 def q7(): # dwa dni po premierze
     query = '(#cyberpunk2077) until:2020-12-12 since:2020-12-10'
@@ -133,7 +133,7 @@ def q7(): # dwa dni po premierze
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'cyberpunk_after_release.csv'
+    csv_file = 'data_MIXED/cyberpunk_after_release.csv'
     save_to_csv(csv_file, tweets)
 
 q1()
