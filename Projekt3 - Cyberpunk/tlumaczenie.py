@@ -7,7 +7,7 @@ from googletrans import Translator
 
 def translate_to_english(text, lang):
     translate_to_english.call_counter += 1
-    #print(translate_to_english.call_counter, lang)
+    print(translate_to_english.call_counter, lang)
     if lang == 'en':
         return text
     elif lang == 'und' or lang == 'qme' or lang == 'qht':
@@ -28,6 +28,12 @@ def translate_to_english(text, lang):
 
 translate_to_english.call_counter = 0
 
+def q8():
+    translate_to_english.call_counter = 0
+    df = pd.read_csv('data_MIXED/daily_tweets.csv')
+    df['Content'] = df.apply(lambda row: translate_to_english(row['Content'], row['Lang']), axis=1)
+
+    df.to_csv('ENG_daily_tweets.csv', index=False)
 def q1():
     translate_to_english.call_counter = 0
     df = pd.read_csv('data_MIXED/cyberpunk_first_move.csv')
@@ -84,9 +90,4 @@ def q7():
     df.to_csv('ENG_first_gameplay.csv', index=False)
 
 
-q2()
-q3()
-q4()
-q5()
-q6()
-q7()
+q8()

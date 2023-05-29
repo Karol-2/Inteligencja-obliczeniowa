@@ -68,7 +68,7 @@ def plot_emotion_changes(dates, emotions):
 
     ax.grid()
     plt.title('Analiza Czasowa Emocji')
-    plt.savefig('Analiza Czasowa Emocji.png')
+    plt.savefig('Analiza Czasowa Emocji - 129676.png')
     plt.show()
 
 

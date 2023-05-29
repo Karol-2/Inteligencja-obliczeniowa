@@ -1,7 +1,9 @@
 import csv
+from datetime import datetime, timedelta
+
 import snscrape.modules.twitter as sntwitter
 
-max_len = 30_000
+max_len = 300
 
 
 def save_to_csv(name, tweets):
@@ -20,6 +22,37 @@ def save_to_csv(name, tweets):
 
     print(f"Pobrane tweety zostały zapisane do pliku: {name}")
 
+def q8():
+    start_date = '2020-11-01'
+    end_date = '2021-02-28'
+    query_template = '(#cyberpunk2077) until:{end_date} since:{start_date}'
+    tweets = []
+    i = 0
+
+    current_date = datetime.strptime(start_date, "%Y-%m-%d")
+    data_koncowa = datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=1)
+
+    while current_date + timedelta(days=1) < data_koncowa:
+        next_day = current_date + timedelta(days=1)
+        query = query_template.format(start_date=current_date.strftime("%Y-%m-%d"), end_date=next_day.strftime("%Y-%m-%d"))
+
+        for tweet in sntwitter.TwitterSearchScraper(query).get_items():
+            tweets.append(tweet)
+            i += 1
+            print(i, tweet.date, query)
+
+            if i >= max_len:
+                i=0
+                break
+
+        if current_date + timedelta(days=1) > data_koncowa:
+            break
+
+        # Zaktualizuj current_date do następnego dnia
+        current_date = next_day
+
+    csv_file = 'data_MIXED/daily_tweets.csv'
+    save_to_csv(csv_file, tweets)
 
 def q1():
     query = '(#cyberpunk2077) until:2018-06-12 since:2018-06-10'
@@ -34,7 +67,7 @@ def q1():
         if len(tweets) >= max_len:
             break
 
-    csv_file = 'data_MIXED/cyberpunk_first_trailer.csv'
+    csv_file = 'data_MIXED/daily_tweets.csv'
     save_to_csv(csv_file, tweets)
 
 
@@ -136,10 +169,4 @@ def q7(): # dwa dni po premierze
     csv_file = 'data_MIXED/cyberpunk_after_release.csv'
     save_to_csv(csv_file, tweets)
 
-q1()
-q2()
-q3()
-q4()
-q5()
-q6()
-q7()
+q8()
