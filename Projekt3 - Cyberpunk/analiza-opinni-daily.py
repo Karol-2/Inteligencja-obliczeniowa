@@ -7,14 +7,7 @@ import pandas as pd
 import text2emotion as te
 
 
-def save_to_csv(data, file_name):
-    with open(file_name, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['Emotions'])  # Nagłówek kolumny
 
-        for batch in data:
-            for tweet in batch:
-                writer.writerow([tweet])
 def calculate_average_emotions(file):
     emotions = ['Happy', 'Angry', 'Surprise', 'Sad', 'Fear']
     tweets = 0
@@ -24,11 +17,12 @@ def calculate_average_emotions(file):
 
     data['Date'] = pd.to_datetime(data['Date'])
     unikalne_daty = data['Date'].dt.date.unique()
-    print(unikalne_daty)
 
     for date in unikalne_daty:
         subset = data[data['Date'].dt.date == date]
         content = subset['Content'].tolist()
+        if tweets == 35705:
+            break
 
         for i in range(0, len(content), tweets_per_day):
             batch = content[i:i + tweets_per_day]
@@ -48,14 +42,17 @@ def calculate_average_emotions(file):
             all_emotions.append(averages)
             print(all_emotions)
 
-    save_to_csv(all_emotions,'all_emotions.csv')
-    save_to_csv(unikalne_daty, 'dates.csv')
+    data_string = []
+    for data in unikalne_daty:
+        data_string.append(data.strftime('%Y-%m-%d'))
+
+    unikalne_daty = data_string
     plot_emotion_changes(unikalne_daty,all_emotions)
 
 
 
 def plot_emotion_changes(dates, emotions):
-    x = [datetime.strptime(date, "%Y-%m-%d %H:%M:%S%z") for date in dates]
+    x = [datetime.strptime(date, "%Y-%m-%d") for date in dates]
     y_happy = [emotion['Happy'] for emotion in emotions]
     y_angry = [emotion['Angry'] for emotion in emotions]
     y_surprise = [emotion['Surprise'] for emotion in emotions]
@@ -68,11 +65,11 @@ def plot_emotion_changes(dates, emotions):
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y'))
 
     # Dodawanie danych emocji na wykres
-    ax.plot(x, y_happy, label='Happy', color='g', marker='o')
-    ax.plot(x, y_angry, label='Angry', color='r', marker='o')
-    ax.plot(x, y_surprise, label='Surprise', color='c', marker='o')
-    ax.plot(x, y_sad, label='Sad', color='b', marker='o')
-    ax.plot(x, y_fear, label='Fear', color='m', marker='o')
+    ax.plot(x, y_happy, label='Happy', color='g')
+    ax.plot(x, y_angry, label='Angry', color='r')
+    ax.plot(x, y_surprise, label='Surprise', color='c')
+    ax.plot(x, y_sad, label='Sad', color='b')
+    ax.plot(x, y_fear, label='Fear', color='m')
 
     ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     ax.set_xlabel('Data')
