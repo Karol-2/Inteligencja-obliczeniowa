@@ -9,7 +9,6 @@ def calculate_average_emotions(files):
     emotions = ['Happy', 'Angry', 'Surprise', 'Sad', 'Fear']
     dates = []
     tweets = 0
-    #max_tweets = 10
     all_emotions = []
 
     for file in files:
@@ -21,9 +20,6 @@ def calculate_average_emotions(files):
 
         for content in data['Content']:
             tweets += 1
-           # if tweets > max_tweets:
-            #    tweets = 0
-               # break
             result = te.get_emotion(content)
             print(tweets)
 
@@ -35,8 +31,6 @@ def calculate_average_emotions(files):
 
         all_emotions.append(averages)
 
-   # print("Dates:", dates)
-   # print("Emotions:",all_emotions)
     plot_emotion_changes(dates,all_emotions)
 
 
@@ -54,7 +48,6 @@ def plot_emotion_changes(dates, emotions):
     ax.xaxis.set_major_locator(mdates.MonthLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y'))
 
-    # Dodawanie danych emocji na wykres
     ax.plot(x, y_happy, label='Happy', color='g', marker='o')
     ax.plot(x, y_angry, label='Angry', color='r', marker='o')
     ax.plot(x, y_surprise, label='Surprise', color='c', marker='o')

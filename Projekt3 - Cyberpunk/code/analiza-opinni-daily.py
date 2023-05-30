@@ -64,7 +64,6 @@ def plot_emotion_changes(dates, emotions):
     ax.xaxis.set_major_locator(mdates.MonthLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y'))
 
-    # Dodawanie danych emocji na wykres
     ax.plot(x, y_happy, label='Happy', color='g')
     ax.plot(x, y_angry, label='Angry', color='r')
     ax.plot(x, y_surprise, label='Surprise', color='c')
@@ -77,10 +76,10 @@ def plot_emotion_changes(dates, emotions):
     plt.xticks(rotation=45)
 
     ax.grid()
-    plt.title('Analiza Czasowa Emocji')
+    plt.title('Analiza Czasowa Emocji od listopada 2020 do lutego 2021')
     plt.savefig('Analiza Czasowa Emocji - daily.png')
     plt.show()
 
 
-file= 'ENG_daily_tweets.csv'
+file= '../data_ENGLISH/ENG_daily_tweets.csv'
 calculate_average_emotions(file)

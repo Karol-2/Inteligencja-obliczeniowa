@@ -1,11 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('CDP-kursy.csv')
+df = pd.read_csv('../data_MIXED/CDP-kursy.csv')
 
 df['Data'] = pd.to_datetime(df['Data'])
 
-# Utworzenie wykresu
 plt.figure(figsize=(10, 6))
 plt.plot(df['Data'], df['Zamknięcie'])
 plt.xlabel('Data')
