@@ -19,10 +19,6 @@ def fitness_func(solution, solution_idx):
     return total_reward
 
 
-env = gym.make('FrozenLake8x8-v1', is_slippery=False, render_mode="human")
-env.reset(seed=42)
-
-num_actions = env.action_space.n
 chromosome_length = 50
 gene_space = [0, 1, 2, 3]
 
@@ -56,12 +52,15 @@ solution, solution_fitness, solution_idx = ga_instance.best_solution()
 print("Najlepsze rozwiązanie: ", solution)
 print("Fitness najlepszego rozwiązania: ", solution_fitness)
 
-for action in solution:
-    action = int(action)
-    env.render()
-    observation, reward, terminated, truncated, info = env.step(action)
-    if terminated or truncated:
-        break
+if solution_fitness > 0:
+    env = gym.make('FrozenLake8x8-v1', is_slippery=False, render_mode="human")
+    env.reset(seed=42)
+    for action in solution:
+        action = int(action)
+        env.render()
+        observation, reward, terminated, truncated, info = env.step(action)
+        if terminated or truncated:
+            break
 
 '''
 Chromosomy:
