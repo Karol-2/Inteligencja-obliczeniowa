@@ -1,5 +1,5 @@
 Stan gry i akcji są dyskretne:
-    - Blackjack, Taxi
+    - Taxi
 Stan gry jest ciągły, zestaw akcji dyskretny:
     - LunarLander
 Stan gry i zestaw akcji jest ciągły:
