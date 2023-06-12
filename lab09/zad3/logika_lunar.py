@@ -1,68 +1,75 @@
-import skfuzzy as fuzz
-from matplotlib import pyplot as plt
-from skfuzzy import control as ctrl
 import gym
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Prędkość lądownika
-velocity = ctrl.Antecedent(np.arange(-1, 1, 0.1), 'velocity')
-velocity['negative'] = fuzz.trimf(velocity.universe, [-1, -1, 0])
-velocity['zero'] = fuzz.trimf(velocity.universe, [-0.1, 0, 0.1])
-velocity['positive'] = fuzz.trimf(velocity.universe, [0, 1, 1])
+# E)
+position = ctrl.Antecedent(np.arange(-1.2, 1.21, 0.01), 'position')
+velocity = ctrl.Antecedent(np.arange(-0.07, 0.071, 0.001), 'velocity')
+angle = ctrl.Antecedent(np.arange(-np.pi, np.pi + 0.01, 0.01), 'angle')
+angular_velocity = ctrl.Antecedent(np.arange(-np.pi, np.pi + 0.01, 0.01), 'angular_velocity')
 
-# Kąt lądownika
-angle = ctrl.Antecedent(np.arange(-1, 1, 0.1), 'angle')
-angle['negative'] = fuzz.trimf(angle.universe, [-1, -1, 0])
-angle['zero'] = fuzz.trimf(angle.universe, [-0.1, 0, 0.1])
-angle['positive'] = fuzz.trimf(angle.universe, [0, 1, 1])
+action = ctrl.Consequent(np.arange(0, 4, 1), 'action')
 
-# Przyspieszenie silnika
-engine_power = ctrl.Consequent(np.arange(-1, 1, 0.1), 'engine_power')
-engine_power['low'] = fuzz.trimf(engine_power.universe, [-1, -1, -0.5])
-engine_power['medium'] = fuzz.trimf(engine_power.universe, [-0.7, 0, 0.7])
-engine_power['high'] = fuzz.trimf(engine_power.universe, [0.5, 1, 1])
 
-# velocity.view()
-# plt.show()
-# angle.view()
-# plt.show()
-# engine_power.view()
-# plt.show()
 
-rule1 = ctrl.Rule(velocity['negative'] & angle['negative'], engine_power['high'])
-rule2 = ctrl.Rule(velocity['negative'] & angle['zero'], engine_power['high'])
-rule3 = ctrl.Rule(velocity['negative'] & angle['positive'], engine_power['medium'])
-rule4 = ctrl.Rule(velocity['zero'] & angle['negative'], engine_power['medium'])
-rule5 = ctrl.Rule(velocity['zero'] & angle['zero'], engine_power['low'])
-rule6 = ctrl.Rule(velocity['zero'] & angle['positive'], engine_power['medium'])
-rule7 = ctrl.Rule(velocity['positive'] & angle['negative'], engine_power['low'])
-rule8 = ctrl.Rule(velocity['positive'] & angle['zero'], engine_power['low'])
-rule9 = ctrl.Rule(velocity['positive'] & angle['positive'], engine_power['low'])
 
-rules = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9])
+position['negative'] = fuzz.trimf(position.universe, [-1.2, -1.2, 0])
+position['zero'] = fuzz.trimf(position.universe, [-1.2, 0, 1.2])
+position['positive'] = fuzz.trimf(position.universe, [0, 1.2, 1.2])
 
-engine = ctrl.ControlSystemSimulation(rules)
-env = gym.make('LunarLanderContinuous-v2')
+velocity['negative'] = fuzz.trimf(velocity.universe, [-0.07, -0.07, 0])
+velocity['zero'] = fuzz.trimf(velocity.universe, [-0.07, 0, 0.07])
+velocity['positive'] = fuzz.trimf(velocity.universe, [0, 0.07, 0.07])
 
-observation = env.reset()
+angle['negative'] = fuzz.trimf(angle.universe, [-np.pi, -np.pi, 0])
+angle['zero'] = fuzz.trimf(angle.universe, [-np.pi, 0, np.pi])
+angle['positive'] = fuzz.trimf(angle.universe, [0, np.pi, np.pi])
+
+angular_velocity['negative'] = fuzz.trimf(angular_velocity.universe, [-np.pi, -np.pi, 0])
+angular_velocity['zero'] = fuzz.trimf(angular_velocity.universe, [-np.pi, 0, np.pi])
+angular_velocity['positive'] = fuzz.trimf(angular_velocity.universe, [0, np.pi, np.pi])
+
+action['do_nothing'] = fuzz.trimf(action.universe, [0, 0, 0])
+action['fire_left'] = fuzz.trimf(action.universe, [0, 0, 1])
+action['fire_main'] = fuzz.trimf(action.universe, [1, 2, 3])
+action['fire_right'] = fuzz.trimf(action.universe, [2, 3, 3])
+
+# F)
+rules = [
+    ctrl.Rule(position['negative'] | velocity['negative'], action['fire_left']),
+    ctrl.Rule(angle['positive'] | angular_velocity['positive'], action['fire_right']),
+    ctrl.Rule(position['zero'] | velocity['zero'], action['do_nothing']),
+    ctrl.Rule(position['positive'] | velocity['positive'], action['fire_main'])
+]
+
+controller = ctrl.ControlSystem(rules)
+simulation = ctrl.ControlSystemSimulation(controller)
+env = gym.make("LunarLanderContinuous-v2",render_mode="human")
+state = env.reset()
+
 done = False
-
 while not done:
     env.render()
-    observation = observation[0]
-    # Oblicz wejścia dla kontrolera rozmytego
-    velocity_value = observation[1]
-    angle_value = observation[4]
 
-    # Wylicz sterowanie z wykorzystaniem kontrolera rozmytego
-    engine.input['velocity'] = velocity_value
-    engine.input['angle'] = angle_value
-    engine.compute()
+    simulation.input['position'] = state[0][0]
+    simulation.input['velocity'] = state[0][1]
+    simulation.input['angle'] = state[0][2]
+    simulation.input['angular_velocity'] = state[0][3]
 
-    engine_power_value = engine.output['engine_power']
+    simulation.compute()
+    ac = simulation.output
+    action_value = np.argmax(ac['action'])
+    ac_val=(list(action_value))
 
-    # Podjęcie akcji na podstawie sterowania
-    action = np.array([engine_power_value])
-    observation, reward, done, info = env.step(action)
+    state, reward, terminated,trunctuated, info = env.step(ac_val)
+    if terminated or trunctuated:
+        break
 
-env.close()
+# position.view()
+# velocity.view()
+# angle.view()
+# angular_velocity.view()
+# action.view()
+# plt.show()

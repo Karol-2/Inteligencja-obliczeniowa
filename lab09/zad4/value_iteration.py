@@ -1,57 +1,92 @@
 import gym
 import numpy as np
-# NIE DZIAŁA, W SENSIE WPADA DO DZIURY
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
 
-def value_iteration(env, gamma=0.9, theta=1e-8, max_iterations=1000):
-    env.reset(seed=42)
-    V = np.zeros(env.observation_space.n)
+env = gym.make('FrozenLake-v1', render_mode="human")
 
-    for i in range(max_iterations):
-        delta = 0
+action = ctrl.Antecedent(np.arange(0, 4, 1), 'action')
+value = ctrl.Consequent(np.arange(0, 1, 0.1), 'value')
 
-        for s in range(env.observation_space.n):
-            v = V[s]
+action['left'] = fuzz.trimf(action.universe, [0, 0, 1])
+action['down'] = fuzz.trimf(action.universe, [0, 1, 2])
+action['right'] = fuzz.trimf(action.universe, [1, 2, 3])
+action['up'] = fuzz.trimf(action.universe, [2, 3, 3])
 
-            Q = np.zeros(env.action_space.n)
-            for a in range(env.action_space.n):
-                for prob, next_state, reward, done in env.P[s][a]:
-                    Q[a] += prob * (reward + gamma * V[next_state])
+value['low'] = fuzz.trimf(value.universe, [0, 0, 0.5])
+value['medium'] = fuzz.trimf(value.universe, [0, 0.5, 1])
+value['high'] = fuzz.trimf(value.universe, [0.5, 1, 1])
 
-            best_action = np.argmax(Q)
-            V[s] = Q[best_action]
+rule1 = ctrl.Rule(action['left'], value['low'])
+rule2 = ctrl.Rule(action['down'], value['low'])
+rule3 = ctrl.Rule(action['right'], value['medium'])
+rule4 = ctrl.Rule(action['up'], value['high'])
 
-            delta = max(delta, abs(v - V[s]))
+value_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4])
+value_sim = ctrl.ControlSystemSimulation(value_ctrl)
+gamma = 0.9
+epsilon = 1e-8
 
-        if delta < theta:
-            break
+V = np.zeros(env.observation_space.n)
 
-    policy = np.zeros(env.observation_space.n, dtype=int)
+while True:
+    delta = 0
+
     for s in range(env.observation_space.n):
-        Q = np.zeros(env.action_space.n)
+        max_value = float('-inf')
         for a in range(env.action_space.n):
-            for prob, next_state, reward, done in env.P[s][a]:
-                Q[a] += prob * (reward + gamma * V[next_state])
-        policy[s] = np.argmax(Q)
+            value_sim.input['action'] = a
+            value_sim.compute()
 
-    return policy
+            q_value = env.P[s][a]
+            expected_value = 0
 
+            for prob, next_state, reward, done in q_value:
+                expected_value += prob * (reward + gamma * V[next_state])
 
-# Tworzymy środowisko FrozenLake
-env = gym.make('FrozenLake8x8-v1', is_slippery=False)
-env.reset(seed=42)
+            if expected_value > max_value:
+                max_value = expected_value
 
-# Wywołujemy Value Iteration Algorithm
-optimal_policy = value_iteration(env)
+        delta = max(delta, abs(V[s] - max_value))
+        V[s] = max_value
 
-# Wyświetlamy optymalną politykę
-print("Optymalna polityka:")
-print(optimal_policy)
-
-env = gym.make('FrozenLake8x8-v1', is_slippery=False, render_mode="human")
-env.reset(seed=42)
-for action in optimal_policy:
-    action = int(action)
-    env.render()
-    observation, reward, terminated, truncated, info = env.step(action)
-    if terminated or truncated:
+    if delta < epsilon:
         break
+
+policy = np.zeros(env.observation_space.n)
+
+for s in range(env.observation_space.n):
+    max_value = float('-inf')
+    best_action = None
+
+    for a in range(env.action_space.n):
+        value_sim.input['action'] = a
+        value_sim.compute()
+
+        q_value = env.P[s][a]
+        expected_value = 0
+
+        for prob, next_state, reward, done in q_value:
+            expected_value += prob * (reward + gamma * V[next_state])
+
+        if expected_value > max_value:
+            max_value = expected_value
+            best_action = a
+
+    policy[s] = best_action
+
+print(policy)
+observation = env.reset()
+done = False
+
+while not done:
+    env.render()
+
+    if isinstance(observation, tuple):
+        observation = observation[0]
+
+    action = policy[observation]
+    observation, reward, terminated, truncated, info = env.step(int(action))
+
+    if terminated or truncated:
+        done = True

@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 import random
-#  source https://www.datacamp.com/tutorial/introduction-q-learning-beginner-tutorial
+#  https://www.datacamp.com/tutorial/introduction-q-learning-beginner-tutorial
 
 env = gym.make("FrozenLake-v1", map_name="4x4", is_slippery=False)
 
